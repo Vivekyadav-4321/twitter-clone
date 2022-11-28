@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VastCards</title>
+  <meta name="theme-color" id="themecolor" content="white">
+
+
+  <link rel="stylesheet" href="/index.css">
+  <script src="/index.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <meta name="description"
+    content="VastCards is the random quotes site where you will get amazing quotes from the great personalities from different fields like art, science, technology, and quotes from different categories like inspirational, life, success, truth, and much more.">
+  <meta name="keywords"
+    content="quotes, random quotes, inspirational quotes, life quotes, success quotes, quotes on life">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <script>
+    var socket = io();
+  </script>
+</head>
+
+<body>
+
+
+  <center>
+    <h1 style="margin-bottom: 0%;margin-top: 0%;" class="sitetitle">
+      Vast<span style="font-weight: 200;">Cards</span>
+    </h1>
+    <p style="margin-top: 0%;"><small class="titlesmallheaing" style="font-size: 14px; color: #0ed1b7;">Microblogging Site</small></p>
+  </center>
+  <hr>
+
+
+
+
+<!-- main constent of the page  -->
+
+<div id="catagorydiv"></div>
+<span id="maincontent"></span>
+<!-- main content of the of the page ends -->
+
+
+
+
+  <div id="optionbar">
+    <li class="fa iconbutton fa-arrow-up" onclick="window.scrollTo(0,0)"></li>
+    <li class="fa iconbutton fa-refresh" onclick="window.location = window.location.href"></li>
+    <li class=" fa iconbutton fa-font" onclick="chanefontstyle();fontcolorcount();"></li>
+    <li class="fa iconbutton fa-home" onclick="window.location = '/'"></li>
+    <li class="fa iconbutton fa-search" onclick="window.location = '/search'"></li>
+    <li class="fa iconbutton fa-paint-brush" onclick="changethemecolor();themecounter();"></li>
+    <li class="fa iconbutton fa-edit" onclick="location.href='/submit'"></li>
+    <i class="fa iconbutton fa-user" onclick="window.location = '/profile'" aria-hidden="true"></i>
+
+
+  </div>
+
+
+
+  <div>
+    <center><i class="fa linkedicon fa-spinner" id="bottomplusicon" style="color: gray;"></i></center>
+    <br>
+  </div>
+  <hr>
+  <br>
+  <div class="navigation">
+    <center>
+      <li class="navlinks"> <a href="/p/about">About</a></li>
+      <li class="navlinks"><a href="/p/contact">Contact</a></li>
+      <li class="navlinks"><a href="/p/privacy">Privacy</a></li>
+      <li class="navlinks"><a href="/p/terms"> Terms & Conditions</a></li>
+      <li class="navlinks"><a href="/p/Disclamer">Disclamer</a></li>
+    </center>
+
+    <center><small style="font-size: 11px;color: gra;">Copyright © VastCards. All rights reserved.</small></center>
+
+
+
+
+    <script>
+
+      var pagecategory = window.location.href.split('/').slice(-1)[0]
+      
+          // requesting the database to send 10 quotes when the pages is loaded on the user device
+          for (var i = 0; i <= 10; i++) {
+            socket.emit("sendpostforthecurrentcatagory", pagecategory)
+          }
+      
+          // getting post content from server an adding to maincontent div
+          socket.on("addthiscatagorypost", (data) => {
+            var div = document.createElement("div")
+            div.innerHTML = data
+            var maincontent = document.getElementById("maincontent")
+            maincontent.append(div)
+      
+          })
+      
+          // getting all the catagory tags and adding them to the catagory div 
+      
+          socket.emit("sendalltagsfromcurrentcatagory", pagecategory)
+          socket.on("addthistagtocatagorypage",(data)=>{
+      var catagrorydiv = document.getElementById("catagorydiv")
+      var i = document.createElement("i")
+      i.innerHTML = data
+      catagrorydiv.appendChild(i)
+            
+          })
+      
+      
+          window.onscroll = function () {
+      
+            if (window.scrollY + window.innerHeight >= (document.documentElement.scrollHeight) * 0.80) {
+              socket.emit("sendpostforthecurrentcatagory", pagecategory)
+              document.getElementById("optionbar").style.display = "none"
+            }
+            if(window.scrollY + window.innerHeight <= (document.documentElement.scrollHeight) * 0.95){
+              document.getElementById("optionbar").style.display = "block"
+      
+            }
+          }
+      
+          function chceklikeordislike(quoteid) {
+            var likecounterid = `likes${quoteid}`
+            var likecounter = document.getElementById(likecounterid)
+            socket.emit("likedquoteid", quoteid)
+            likecounter.innerText = Number(likecounter.innerText) + 1
+          }
+      
+      
+        </script>
+      
+      
+      
+
+
+
+
+
+    <style>
+      .fa-plus {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      #bottomplusicon {
+        animation: blinker 1s linear infinite
+      }
+
+      @keyframes blinker {
+        100% {
+          opacity: 0;
+        }
+      }
+
+      li a:hover {
+
+        color: dodgerblue;
+      }
+
+
+      .navlinks {
+        position: relative;
+        font-size: 12px;
+      }
+
+      li {
+        display: inline;
+        padding: 13px;
+        font-family: 'Jost', sans-serif;
+        text-decoration: none;
+      }
+
+      li a {
+        text-decoration: none;
+        color: gray;
+      }
+
+      .navigation {
+        font-family: 'jost', sans-serif;
+      }
+
+      @media only screen and (max-width: 600px) {
+
+        li {
+          padding: 3px;
+          font-size: 6px;
+        }
+      }
+    </style>
+
+  </div>
+
+</body>
+
+</html>

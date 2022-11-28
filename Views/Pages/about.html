@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/submit/index.css">
+    <!-- <script src="/submit/index.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <center>
+        <div class="sitetitle">
+            <h1><a href="/logo.png"><img src="./logo.png" style="height: 30px; width: a to;" alt=""></a>
+                <a href="/"> <span id="title">&nbsp; Vast<span style="font-weight: 200;">Cards</span></a>
+            </h1>
+        </div>
+    </center>
+
+
+
+    <div id="card">
+        <p>
+            Hi, my name is Vivek Yadav and I create this site so that you can read the quotes, facts, facts, and many
+            many more things.
+        </p>
+        <p>
+            All the content is available in the form of a card where you can know who is behind the content of the card
+            and you can know more about the creation of the card.
+        </p>
+        <p>
+            The content of the site can be reached by anyone so I made the site free for everyone. You can create your
+            card within a few minutes.
+        <p>Anyone can go to the creator page and create the card for free. Signup for
+            creating a card is not necessary but it is recommended.
+        </p>
+
+        </p>
+        <p>Before VastCards there was no proper site where someone can read and create their info card and share them
+            with other people.
+        </p>
+        <p>You can know more about VastCards by visiting the contact us page.
+        </p>
+
+    </div>
+
+
+
+
+
+
+
+    <center>
+        <i class="fa fa-bullhorn"></i>
+        <li class="fa whatsappicon fa-whatsapp" onclick="whatsappshare()"></li>
+        <li class="fa facbookicon fa-facebook-f" onclick="facebookshare()"></li>
+        <li class="fa twittericon fa-twitter" onclick="twittershare()"></li>
+        <li class="fa redditicon fa-reddit" onclick="redditshre()"></li>
+        <li class="fa linkedicon fa-link" id="copylink" onclick="sharecopy()"></li>
+    </center>
+    <hr>
+
+    <center>
+        <br>
+
+        <li class="navlinks"> <a href="/p/about">About</a></li>
+        <li class="navlinks"><a href="/p/contact">Contact</a></li>
+        <li class="navlinks"><a href="/p/privacy">Privacy</a></li>
+        <li class="navlinks"><a href="/p/terms"> Terms & Conditions</a></li>
+        <li class="navlinks"><a href="/p/Disclamer">Disclamer</a></li>
+    </center>
+    <br>
+    <center><small style="font-size: 11px;">Copyright © VastCards All rights reserved.</small></center>
+
+    <script>
+
+        function whatsappshare() {
+            var url = `https://wa.me/?text=${window.location.href}`
+            window.open(url, '_blank');
+
+        }
+
+        function facebookshare() {
+
+            var url = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`
+            window.open(url, '_blank');
+
+        }
+
+        function twittershare() {
+
+            var url = `https://twitter.com/intent/tweet?text=${window.location.href}`
+            window.open(url, '_blank');
+        }
+
+        function redditshre() {
+
+
+            var url = `  https://www.reddit.com/submit?title=VastCards&url=${window.location.href}`
+            window.open(url, '_blank');
+        }
+
+        function pasteurl() {
+
+
+            navigator.clipboard.readText().then((copiedtext) => {
+
+                const inputfiled = document.getElementById("inputfield")
+                inputfiled.value = copiedtext
+
+
+                var inputlink = document.getElementById("inputfield").value
+                var isyoutubelink = inputlink.match("you")
+
+                if (isyoutubelink != null) {
+                    document.getElementById("downloadpageform").submit()
+
+                }
+
+                var userinputlink = document.getElementById("inputfield").value
+                var isyoutubelink = userinputlink.match("you")
+                if (isyoutubelink != null) {
+
+                    document.getElementById("downloadpageform").submit()
+                }
+
+
+            })
+
+
+        }
+
+        function sharecopy() {
+
+            navigator.clipboard.writeText(`${window.location.href}`)
+
+            document.getElementById("copylink").classList.remove("fa-link")
+            document.getElementById("copylink").classList.add("fa-check")
+
+
+            setInterval(() => {
+                document.getElementById("copylink").classList.remove("fa-check")
+                document.getElementById("copylink").classList.add("fa-link")
+            }, 6000);
+
+        }
+
+    </script>
+
+
+
+
+</body>
+
+</html>

@@ -1,32 +1,22 @@
 {
-  "dependencies": {
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "hbs": "^4.2.0",
-    "instagram-url-direct": "^1.0.9",
-    "instagram-url-downloader": "^1.1.0",
-    "javascript-time-ago": "^2.3.13",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.3.1",
-    "node-fetch": "2.0",
-    "nodemon": "^2.0.16",
-    "randomcolor": "^0.6.2",
-    "short-number": "^1.0.7",
-    "time-age": "^1.1.0",
-    "video-url-link": "^0.1.5",
-    "wikipedia": "^1.1.7",
-    "ytdl-core": "^4.11.0"
-  },
+  "name": "quotes",
+  "version": "1.0.0",
+  "description": "A site where user can read and submit quotes",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "name": "vastcards",
-  "version": "1.0.0",
-  "main": "server.js",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "quotes"
+  ],
+  "author": "Vivek Yadav",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.6",
+    "node-fetch": "2.0",
+    "socket.io": "^4.4.1",
+    "wikipedia": "^1.1.7"
+  }
 }

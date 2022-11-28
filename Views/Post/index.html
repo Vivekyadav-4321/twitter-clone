@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VastCards</title>
+  <meta name="theme-color" id="themecolor" content="white">
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <meta name="description"
+    content="VastCards is the random quotes site where you will get amazing quotes from the great personalities from different fields like art, science, technology, and quotes from different categories like inspirational, life, success, truth, and much more.">
+  <meta name="keywords"
+    content="quotes, random quotes, inspirational quotes, life quotes, success quotes, quotes on life">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <script>
+    var socket = io();
+  </script>
+  <link rel="stylesheet" href="/index.css">
+  <script src="/index.js"></script>
+
+</head>
+
+<body>
+
+
+  <center>
+    <h1 style="margin-bottom: 0%;margin-top: 0%;" class="sitetitle">
+      Vast<span style="font-weight: 200;">Cards</span>
+    </h1>
+    <p style="margin-top: 0%;"><small class="titlesmallheaing" style="font-size: 14px; color: #0ed1b7;">Microblogging
+        Site</small></p>
+  </center>
+  <hr>
+  <br>
+
+  <!-- main constent of the page  -->
+  <span id="maincontent"></span>
+  <center> <small style="font: 200; font-size: 11px;color: #747272;margin-bottom: 6px;">
+      Comments On This Post</small>
+    </center>
+  <br>
+
+  <!-- commecnt section  -->
+  <div id="postcommentsection"> </div>
+  <!-- comment section ends  -->
+
+  <center><small
+      style="color: gray;font-size: 11px; margin: 14px;border-radius: 3px;padding: 7px;padding-left: 10;padding-right: 15;"
+      id="addyourcomment" onclick="showcommetinputform()">Add Your Comment</small>
+    </center>
+<!-- comment input form  -->
+  <div id="commentinputform" style="display: none;" class="card">
+    <center>
+      <br>
+      <input type="text" name="authornamecomment" style="border-radius: 0%;" placeholder="Your name"
+        id="authornamecomment"><br><br>
+      <textarea name="usercommentinput" id="usercommentinput" placeholder="Add your comment here" cols="30"
+        rows="10"></textarea>
+      <br>
+      <button class="resetbutton" id="commentresetbutton" onclick="resetcommentinput()" type="reset">
+        Reset</button><button id="commentsubmitbutton" onclick="submitcomment()" class="submitbutton"
+        type="button">Submit</button>
+    </center>
+    <br>
+  </div>
+<!-- comment input form ends  -->
+
+
+  <!-- main content of the of the page ends -->
+
+
+
+  <br>
+  <div class="navigation">
+    <center>
+      <li class="navlinks"> <a href="/p/about">About</a></li>
+      <li class="navlinks"><a href="/p/contact">Contact</a></li>
+      <li class="navlinks"><a href="/p/privacy">Privacy</a></li>
+      <li class="navlinks"><a href="/p/terms"> Terms & Conditions</a></li>
+      <li class="navlinks"><a href="/p/Disclamer">Disclamer</a></li>
+    </center>
+    <center><small style="font-size: 11px;color: black;">Copyright © VastCards. All rights reserved.</small></center>
+
+    <div id="optionbar">
+      <li class="fa iconbutton fa-arrow-up" onclick="window.scrollTo(0,0)"></li>
+      <li class="fa iconbutton fa-refresh" onclick="window.location = window.location.href"></li>
+      <li class=" fa iconbutton fa-font" onclick="chanefontstyle();fontcolorcount();"></li>
+      <li class="fa iconbutton fa-home" onclick="window.location = '/'"></li>
+      <li class="fa iconbutton fa-search" onclick="window.location = '/search'"></li>
+      <li class="fa iconbutton fa-paint-brush" onclick="changethemecolor();themecounter();"></li>
+      <li class="fa iconbutton fa-edit" onclick="location.href='/submit'"></li>
+
+    </div>
+
+
+  
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- script code of the page starts here  -->
+
+<script>
+
+function addliketothiscomment(commentid) {
+      socket.emit("addliketothecomment", commentid)
+      var initallikes = Number(document.getElementById(`commentlike${commentid}`).innerText)
+      document.getElementById(`commentlike${commentid}`).innerText = initallikes + 1
+    }
+
+    function adddisliketothiscomment(commentid) {
+      socket.emit("adddisliektothiscomment", commentid)
+      var initaldislike = Number(document.getElementById(`commentdislike${commentid}`).innerText)
+      document.getElementById(`commentdislike${commentid}`).innerText = initaldislike + 1
+
+    }
+
+
+
+    function changethelikeiconforthiscomment(e) {
+      e.classList.remove("fa-thumbs-o-up")
+      e.classList.add("fa-thumbs-up")
+      e.setAttribute("disabled", (true))
+
+    }
+
+    function changethesilikeiconforthiscomment(e) {
+      e.classList.remove("fa-thumbs-o-down")
+      e.classList.add("fa-thumbs-down")
+      e.setAttribute("disabled", (true))
+    }
+
+      var postid = window.location.href.split('/').slice(-1)[0]
+
+// requesting the database to send 10 quotes when the pages is loaded on the user device
+socket.emit("sendthisposttothispage", postid)
+
+// getting post content from server an adding to maincontent div
+socket.on("addthisposttothepage", (data) => {
+  var div = document.createElement("div")
+  div.innerHTML = data
+  var maincontent = document.getElementById("maincontent")
+  maincontent.append(div)
+
+})
+
+
+// getting commetn from the user and then seding tit to the database
+function submitcomment() {
+  if (document.getElementById("nocommentbar")) {
+    document.getElementById("nocommentbar").style.display = "none"
+  }
+  var authorname = String(document.getElementById("authornamecomment").value)
+  var comment = String(document.getElementById("usercommentinput").value)
+
+  if ((comment != null || undefined || "" || (comment.length <= 200)) && (authorname != "" || null || undefined) & (authorname.length <= 20) && (comment.length < 500)) {
+    socket.emit("addcomment", { postid: postid, authorname: authorname, commentcontent: comment })
+  }
+  document.getElementById("commentinputform").style.display = "none"
+
+  if (authorname.length > 2 && (comment.length > 0 && comment.length < 500)) {
+    var commentdiv = document.createElement("div")
+    commentdiv.innerHTML = `<div class="contentpara"> <span class="authornamecomment">${authorname}</span><br> <span class="commmentbody">${comment}</span> </div>`
+    var comemntseciton = document.getElementById("postcommentsection")
+    comemntseciton.appendChild(commentdiv)
+
+
+  }
+}
+
+socket.emit("sendcomments", postid)
+    socket.on("addcommentocommentsection", (data) => {
+      var comemntseciton = document.getElementById("postcommentsection")
+      var div = document.createElement("div")
+      div.classList.add("commentline")
+      div.innerHTML = data
+      comemntseciton.appendChild(div)
+
+    })
+
+      function chceklikeordislike(quoteid) {
+      var likecounterid = `likes${quoteid}`
+      var likecounter = document.getElementById(likecounterid)
+      socket.emit("likedquoteid", quoteid)
+      likecounter.innerText = Number(likecounter.innerText) + 1
+
+
+    }
+
+function resetcommentinput() {
+      document.getElementById("authornamecomment").value = ""
+      document.getElementById("usercommentinput").value = ""
+
+    }
+
+
+    function showcommetinputform() {
+      document.getElementById("commentinputform").style.display = "block"
+      document.getElementById("addyourcomment").style.display = "none"
+
+    }
+</script>
+
+<!-- script code of the page ends here  -->
+
+
+
+
+
+
+
+
+<!-- style code of the page starts here  -->
+
+  <style>
+
+.contentpara {
+      width: 70%;
+      margin: auto;
+      background-color: rgb(231, 231, 231);
+      padding: 12px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+    }
+
+    .authornamecomment {
+      font-weight: 400;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      text-align: left;
+
+    }
+
+    .commmentbody {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+    }
+
+    .commentlikebutton,
+    .commentdislikebutton {
+      border: 0px solid black;
+      background-color: transparent;
+      font-size: 13px;
+    }
+
+    .commentlikenumber,
+    .commentdislikenumber {
+      font-size: 10px;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+    }
+
+    .authornamecomment {
+      font-weight: 900;
+    }
+
+    .iconbutton {
+      font-size: 15px;
+      padding: 11px;
+      background-color: #ffffff;
+      border: none;
+      color: rgb(44, 44, 44);
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+      margin: 2px;
+      border-radius: 50%;
+    }
+
+    #optionbar {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0 auto;
+      width: auto;
+      display: inline-block;
+      position: fixed;
+      bottom: -10px;
+      text-align: center;
+      border-radius: 30px;
+      background-color: white;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      padding: 9px;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+
+      .iconbutton {
+        font-size: 16px;
+        padding: 10px;
+        background-color: white;
+        border: none;
+        color: rgb(44, 44, 44);
+        text-decoration: none;
+        cursor: pointer;
+        margin: 2px;
+        border-radius: 50%;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+      }
+
+      #optionbar {
+        position: fixed;
+        margin: 0 auto;
+        width: 98%;
+        display: inline-block;
+        position: fixed;
+        text-align: center;
+        background-color: white;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        padding: 9px;
+        bottom: -30px;
+        border-radius: 0%;
+
+
+      }
+
+
+    }
+  </style>
+
+
+
+  <style>
+    input {
+      text-align: left;
+      font-family: 'Jost', sans-serif;
+      text-decoration: none;
+      border-radius: 40px;
+      border: 0px solid black;
+      padding: 6px;
+      height: 25px;
+      width: 70%;
+      margin-top: 3px;
+      padding-left: 18px;
+      margin-top: 2px;
+      background-color: #f7f7f7;
+    }
+
+
+    textarea {
+      height: 35px;
+      width: 70%;
+      padding: 14px;
+      border: 0px solid black;
+      resize: none;
+      background-color: #f7f7f7;
+      text-align: left;
+      font-family: 'Jost', sans-serif;
+    }
+
+
+    .resetbutton,
+    .submitbutton {
+      font-size: 13px;
+      padding: 10px;
+      padding-left: 20px;
+      padding-right: 20px;
+      margin: 6px;
+      background-color: rgb(238, 238, 238);
+      border: none;
+      color: #747272;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 14px;
+      border-radius: 8px;
+      box-shadow: #96969638 0px 5px 15px 0px;
+
+    }
+
+    .submitbutton {
+      background-color: #1DA1F2;
+      color: white;
+    }
+    .commmentbody {
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        display: block;
+      }
+
+
+
+      .fa-plus {
+        padding-left: 13px;
+        padding-right: 13px;
+      }
+
+      #bottomplusicon {
+        animation: blinker 1s linear infinite
+      }
+
+      @keyframes blinker {
+        100% {
+          opacity: 0;
+        }
+      }
+
+      li a:hover {
+
+        color: dodgerblue;
+      }
+
+
+      .navlinks {
+        position: relative;
+        font-size: 12px;
+      }
+
+      li {
+        display: inline;
+        padding: 13px;
+        font-family: 'Jost', sans-serif;
+        text-decoration: none;
+      }
+
+      li a {
+        text-decoration: none;
+        color: gray;
+      }
+
+      .navigation {
+        font-family: 'jost', sans-serif;
+      }
+
+      @media only screen and (max-width: 600px) {
+        textarea {
+          width: 85%;
+          text-align: left;
+          font-family: 'Jost', sans-serif;
+
+        }
+
+        input {
+          width: 85%;
+          text-align: left;
+          font-family: 'Jost', sans-serif;
+
+        }
+
+        .contentpara {
+          width: 90%;
+        }
+
+
+        li {
+          padding: 3px;
+          font-size: 6px;
+        }
+      }
+
+      .authornamecomment {
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+
+      .commentlikenumber,
+      .commentdislike {
+        color: #747272;
+        font-size: 14px;
+      }
+  </style>
+
+</body>
+
+</html>

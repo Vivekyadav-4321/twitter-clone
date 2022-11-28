@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit</title>
+
+
+
+
+
+
+  <link rel="stylesheet" href="/submit/index.css">
+  <!-- <script src="/submit/index.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+  <center>
+    <div class="sitetitle">
+      <h1><a href="/logo.png"><img src="./logo.png" style="height: 30px; width: a to;" alt=""></a>
+        <a href="/"> <span id="title">&nbsp; Vast<span style="font-weight: 200;">Cards</span></a>
+      </h1>
+    </div>
+  </center>
+
+
+
+  <div id="card">
+    <center>
+      <h2>Submit your quote</h2>
+    </center>
+
+    <form id="form" action="/submit" method="post">
+
+      <small>Your Instagram</small>
+      <input type="text" name="instagramusernameofuser" id="igusernamefild" placeholder="@JohnSmith423" ><br>
+      <small id="usersicaialmediainvalidtext" style="display: none;">Invalid</small><br>
+      <i id="formgap"></i>
+
+      <small>Your Quote</small><br>
+      <textarea name="userquote" required id="userquote"
+        placeholder="Fears are nothing more than a state of mind."></textarea><br>
+      <small id="userquoteinvalidtext" style="display: none;">Invalid</small><br>
+     <left>
+  <label for="category"><small>Category : </small></label>
+  <select name="category" required id="selectcategoy">
+    <option value="Quotes">Quotes</option>
+    <option value="Facts">Facts</option>
+    <option value="Comedy">Comedy</option>
+    <option value="Education">Education</option>
+    <option value="Entertainment">Entertainment </option>
+    <option value="Films">Film and Animation</option>
+    <option value="Gaming">Gaming</option>
+    <option value="Music">Music</option>
+    <option value="Peoples">People and Blogs</option>
+    <option value="Animals">Pets and Animals</option>
+    <option value="Science">Science and Technology</option>
+    <option value="Sports">Sports</option>
+    <option value="Travel">Travel and Blogs</option>
+  </select>
+    <label for="tags"> <small>Tags : </small> </label>
+    <input type="text" required style="width:80px" placeholder="Tech, etc" name="tags" id="tags">
+    <br>
+</left>
+  <br>
+
+    <hr>
+
+      <center> <button class="resetbutton" type="reset">Reset</button><button class="submitbutton" id="submitbutton"
+          type="submit">Submit</button></center>
+    </form>
+  </div>
+  <center>
+    <li class="fa whatsappicon fa-whatsapp" onclick="whatsappshare()"></li>
+    <li class="fa facbookicon fa-facebook-f" onclick="facebookshare()"></li>
+    <li class="fa twittericon fa-twitter" onclick="twittershare()"></li>
+    <li class="fa redditicon fa-reddit" onclick="redditshre()"></li>
+    <li class="fa linkedicon fa-link" id="copylink" onclick="sharecopy()"></li>
+  </center>
+  <script>
+
+    var format = /[`\\[\]\\|\/?~]/;
+
+
+    const submibutton = document.getElementById("submitbutton")
+
+    submibutton.addEventListener("click", (e) => {
+      e.preventDefault()
+
+      // getting all the information from the fields when submit button is clicked
+
+      var igaccountname = String(document.getElementById("igusernamefild").value)
+      var userquote = String(document.getElementById("userquote").value)
+      var usertag = String(document.getElementById("tags").value)
+
+      // assuming that initally all  the valuse on the form is filled corretly
+
+      var issocialmediavalid = false
+      var isquotevalid = false
+      var istagvalid = false
+      var invalidinputfiedlcolor = "#ffdcdc"
+      // chceking if the information filled in the form by user is vliad or not 
+
+      if ((usertag != null || "" || undefined) && (usertag.length >= 3 && usertag.length <= 15)) {
+        istagvalid = true
+
+      }
+
+      else {
+        document.getElementById("tags").style.backgroundColor = invalidinputfiedlcolor
+        document.getElementById("usersicaialmediainvalidtext").style.display = "inline"
+      }
+
+
+      if ((igaccountname.charAt(0) == "@") && (igaccountname != null || "" || undefined) && (igaccountname.length >= 3 && igaccountname.length <= 15)) {
+        issocialmediavalid = true
+
+      }
+
+      else {
+        document.getElementById("igusernamefild").style.backgroundColor = invalidinputfiedlcolor
+        document.getElementById("usersicaialmediainvalidtext").style.display = "inline"
+      }
+
+
+      if ((format.test(userquote) != true) && (userquote != "" || undefined || null) && (userquote.length >= 50 && userquote.length <= 200)) {
+        isquotevalid = true
+      }
+
+
+      else {
+        document.getElementById("userquote").style.backgroundColor = invalidinputfiedlcolor
+        document.getElementById("userquoteinvalidtext").style.display = "inline"
+      }
+
+
+
+      if (isquotevalid && issocialmediavalid && istagvalid) {
+
+document.getElementById("form").submit()
+      }
+    })
+
+  </script>
+
+
+ 
+  <hr>
+
+  <center>
+    <br>
+
+    <li class="navlinks"><a href="/p/home">Home</a></li>
+    <li class="navlinks"> <a href="/p/about">About</a></li>
+    <li class="navlinks"><a href="/p/contact">Contact</a></li>
+    <li class="navlinks"><a href="/p/privacy">Privacy</a></li>
+    <li class="navlinks"><a href="/p/terms"> Terms & Conditions</a></li>
+    <li class="navlinks"><a href="/p/Disclamer">Disclamer</a></li>
+  </center>
+  <br>
+  <center><small style="font-size: 11px;">Copyright © VastCards All rights reserved.</small></center>
+
+  <script>
+
+    function whatsappshare() {
+      var url = `https://wa.me/?text=Hey,%20check%20%20out%20this%20amazing%20tool%20:%20${window.location.href}`
+      window.open(url, '_blank');
+
+    }
+
+    function facebookshare() {
+
+      var url = `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`
+      window.open(url, '_blank');
+
+    }
+
+    function twittershare() {
+
+      var url = `https://twitter.com/intent/tweet?text=Hey,%20check%20%20out%20this%20amazing%20tool%20:%20${window.location.href}`
+      window.open(url, '_blank');
+    }
+
+    function redditshre() {
+
+
+      var url = `  https://www.reddit.com/submit?title=Check%20out%20this%20amazing%20tool!&url=${window.location.href}`
+      window.open(url, '_blank');
+    }
+
+    function pasteurl() {
+
+
+      navigator.clipboard.readText().then((copiedtext) => {
+
+        const inputfiled = document.getElementById("inputfield")
+        inputfiled.value = copiedtext
+
+
+        var inputlink = document.getElementById("inputfield").value
+        var isyoutubelink = inputlink.match("you")
+
+        if (isyoutubelink != null) {
+          document.getElementById("downloadpageform").submit()
+
+        }
+
+        var userinputlink = document.getElementById("inputfield").value
+        var isyoutubelink = userinputlink.match("you")
+        if (isyoutubelink != null) {
+
+          document.getElementById("downloadpageform").submit()
+        }
+
+
+      })
+
+
+    }
+
+    function sharecopy() {
+
+      navigator.clipboard.writeText(`Check out this amazing tool ${window.location.href}`)
+
+      document.getElementById("copylink").classList.remove("fa-link")
+      document.getElementById("copylink").classList.add("fa-check")
+
+
+      setInterval(() => {
+        document.getElementById("copylink").classList.remove("fa-check")
+        document.getElementById("copylink").classList.add("fa-link")
+      }, 6000);
+
+    }
+
+  </script>
+
+
+
+
+</body>
+
+</html>

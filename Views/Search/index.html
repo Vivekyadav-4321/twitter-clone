@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VastCards</title>
+  <meta name="theme-color" id="themecolor" content="white">
+
+
+  <link rel="stylesheet" href="/index.css">
+  <script src="/index.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="/logo.png">
+  <meta name="description"
+    content="VastCards is the random quotes site where you will get amazing quotes from the great personalities from different fields like art, science, technology, and quotes from different categories like inspirational, life, success, truth, and much more.">
+  <meta name="keywords"
+    content="quotes, random quotes, inspirational quotes, life quotes, success quotes, quotes on life">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <script>
+    var socket = io();
+  </script>
+</head>
+
+<body>
+
+
+
+  <center>
+    <h1 style="margin-bottom: 0%;margin-top: 0%;" class="sitetitle">
+      Vast<span style="font-weight: 200;">Cards</span>
+    </h1>
+    <p style="margin-top: 0%;"><small class="titlesmallheaing" style="font-size: 14px; color: #0ed1b7;">Microblogging
+        Site</small></p>
+  </center>
+
+  <hr>
+  <br>
+
+  <center>
+    <input type="text" name="searchinput" autocomplete="off" placeholder="Search A Post Here" id="searchinput">
+  </center>
+  <center><button class="resetbutton" onclick="resetsearch()"><i class="fa fa-refresh" aria-hidden="true"></i></i>
+      Reset</button><button class="searchbutton" onclick="searchpost()"><i class="fa fa-search"
+        aria-hidden="true"></i><b> Search</b></button></center>
+  <br>
+  <hr>
+  <br>
+  <div id="maincontent"> </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <hr>
+  <br>
+  <div id="optionbar">
+    <li class="fa iconbutton fa-arrow-up" onclick="window.scrollTo(0,0)"></li>
+    <li class="fa iconbutton fa-refresh" onclick="window.location = window.location.href"></li>
+    <li class=" fa iconbutton fa-font" onclick="chanefontstyle();fontcolorcount();"></li>
+    <li class="fa iconbutton fa-home" onclick="window.location = '/'"></li>
+    <li class="fa iconbutton fa-search" onclick="window.location = '/search'"></li>
+    <li class="fa iconbutton fa-paint-brush" onclick="changethemecolor();themecounter();"></li>
+    <li class="fa iconbutton fa-edit" onclick="location.href='/submit'"></li>
+
+  </div>
+  <div class="navigation">
+    <center>
+      <li class="navlinks"> <a href="/p/about">About</a></li>
+      <li class="navlinks"><a href="/p/contact">Contact</a></li>
+      <li class="navlinks"><a href="/p/privacy">Privacy</a></li>
+      <li class="navlinks"><a href="/p/terms"> Terms & Conditions</a></li>
+      <li class="navlinks"><a href="/p/Disclamer">Disclamer</a></li>
+    </center>
+    <center><small style="font-size: 11px;color: black;">Copyright © VastCards. All rights reserved.</small></center>
+
+
+
+
+
+    <!-- script code start here  -->
+    <script>
+      function chceklikeordislike(quoteid) {
+        var likecounterid = `likes${quoteid}`
+        var likecounter = document.getElementById(likecounterid)
+        socket.emit("likedquoteid", quoteid)
+        likecounter.innerText = Number(likecounter.innerText) + 1
+        navigator.vibrate(100)
+
+
+
+      }
+
+      function resetsearch() {
+        document.getElementById("searchinput").value = ""
+      }
+
+
+      function searchpost() {
+        document.getElementById("maincontent").innerHTML = ""
+        var searchinput = String(document.getElementById("searchinput").value)
+        socket.emit("inputsearch", searchinput)
+      }
+
+
+
+
+
+      for (var i = 0; i <= 10; i++) {
+        socket.emit("sendintalquotes", {})
+      }
+
+      socket.on("completecarddata", (data) => {
+        var div = document.createElement("div")
+        div.innerHTML = data
+        var maincontent = document.getElementById("maincontent")
+        maincontent.append(div)
+
+      })
+
+
+
+      // socket event to add the releavent posts to the search to the search term in the main content box
+      socket.on("addsearchpost", (data) => {
+        var div = document.createElement("div")
+        div.innerHTML = data
+        var maincontent = document.getElementById("maincontent")
+        maincontent.appendChild(div)
+
+      })
+    </script>
+
+
+
+
+
+
+
+
+    <style>
+      li a:hover {
+
+        color: dodgerblue;
+      }
+
+
+      .navlinks {
+        position: relative;
+        font-size: 12px;
+      }
+
+      li {
+        display: inline;
+        padding: 13px;
+        font-family: 'Jost', sans-serif;
+        text-decoration: none;
+      }
+
+      li a {
+        text-decoration: none;
+        color: gray;
+      }
+
+      .navigation {
+        font-family: 'jost', sans-serif;
+      }
+
+      input {
+        text-align: left;
+        text-decoration: none;
+        border-radius: 2px;
+        border: 0px solid black;
+        padding: 6px;
+        height: 30px;
+        width: 70%;
+        margin-top: 3px;
+        padding-left: 18px;
+        margin-top: 2px;
+        background-color: #f7f7f7;
+        font-size: 12px;
+      }
+
+      @media only screen and (max-width: 600px) {
+
+        input {
+          width: 95%;
+        }
+
+        li {
+          padding: 3px;
+          font-size: 6px;
+        }
+
+
+
+
+      }
+
+
+      .resetbutton,
+      .searchbutton {
+        font-size: 12px;
+        padding: 8px;
+        padding-left: 20px;
+        padding-right: 20px;
+        margin: 4px;
+        background-color: rgb(238, 238, 238);
+        border: none;
+        color: #747272;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        margin-top: 14px;
+        border-radius: 8px;
+
+      }
+
+      .searchbutton {
+        background-color: #1DA1F2;
+        color: white;
+      }
+
+      .contentpara {
+        width: 70%;
+        margin: auto;
+        background-color: rgb(231, 231, 231);
+        padding: 12px;
+        border-radius: 14px;
+        margin-bottom: 14px;
+      }
+    </style>
+
+  </div>
+
+</body>
+
+</html>
